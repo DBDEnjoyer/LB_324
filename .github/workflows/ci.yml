@@ -32,5 +32,6 @@ jobs:
           pip install pytest
 
       - name: Run tests
-        run: pytest -q || echo "No tests found."
+         run: pytest -q
+
 
