@@ -1,15 +1,11 @@
 name: CD (main → production)
-
 on:
   push:
     branches: [ "main" ]
-
 permissions:
   contents: read
-
 env:
   PACKAGE_PATH: '.'
-
 jobs:
   package:
     runs-on: ubuntu-latest
@@ -31,15 +27,13 @@ jobs:
         with:
           name: app-package-main
           path: app.zip
-
   deploy:
     runs-on: ubuntu-latest
     needs: package
     if: ${{ secrets.AZURE_WEBAPP_NAME != '' && secrets.AZURE_PUBLISH_PROFILE != '' }}
     steps:
       - uses: actions/checkout@v4
-      - name: Download artifact
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: app-package-main
           path: .
