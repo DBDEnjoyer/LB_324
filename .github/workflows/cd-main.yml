@@ -1,11 +1,15 @@
 name: CD (main → production)
+
 on:
   push:
     branches: [ "main" ]
+
 permissions:
   contents: read
+
 env:
   PACKAGE_PATH: '.'
+
 jobs:
   package:
     runs-on: ubuntu-latest
@@ -27,10 +31,24 @@ jobs:
         with:
           name: app-package-main
           path: app.zip
+
+  preflight:
+    runs-on: ubuntu-latest
+    outputs:
+      can_deploy: ${{ steps.check.outputs.can_deploy }}
+    steps:
+      - id: check
+        run: |
+          if [ -n "${{ secrets.AZURE_WEBAPP_NAME }}" ] && [ -n "${{ secrets.AZURE_PUBLISH_PROFILE }}" ]; then
+            echo "can_deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "can_deploy=false" >> $GITHUB_OUTPUT
+          fi
+
   deploy:
     runs-on: ubuntu-latest
-    needs: package
-    if: ${{ secrets.AZURE_WEBAPP_NAME != '' && secrets.AZURE_PUBLISH_PROFILE != '' }}
+    needs: [package, preflight]
+    if: ${{ needs.preflight.outputs.can_deploy == 'true' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
