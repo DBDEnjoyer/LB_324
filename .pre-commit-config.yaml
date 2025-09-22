@@ -1,19 +1,17 @@
 repos:
-  # Formatter (läuft bei COMMIT)
+  # Formatter & Linter bei COMMIT
   - repo: https://github.com/psf/black
     rev: 24.8.0
     hooks:
       - id: black
         language_version: python3
-
-  # Linter (optionale Qualitätsprüfung bei COMMIT)
   - repo: https://github.com/pycqa/flake8
     rev: 7.1.1
     hooks:
       - id: flake8
         additional_dependencies: [flake8-bugbear]
 
-  # Tests (laufen nur bei PUSH)
+  # Tests bei PUSH (LB fordert: Tests beim Push, nicht beim Commit)
   - repo: local
     hooks:
       - id: pytest-on-push
