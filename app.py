@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-app.config['DEBUG'] = False
+app.config['DEBUG'] = True
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 PASSWORD = os.getenv("PASSWORD", "password")
@@ -22,7 +22,7 @@ entries: list[Entry] = []
 
 @app.context_processor
 def inject_banner():
-    return dict(BRANCH_BANNER="MAIN – Production")
+    return dict(BRANCH_BANNER="DEV – Staging")
 
 @app.route("/", methods=["GET"])
 def index():
@@ -53,7 +53,7 @@ def logout():
 def add_entry():
     from flask import request
     # Branch-spezifisches Verhalten
-    if True and not session.get("logged_in"):
+    if False and not session.get("logged_in"):
         flash("Bitte zuerst einloggen.")
         return redirect(url_for("login"))
     content = request.form.get("content", "").strip()
@@ -66,4 +66,4 @@ def add_entry():
     return redirect(url_for("index"))
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "5000")), debug=False)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "5000")), debug=True)

@@ -1,6 +1,6 @@
-# Diary App (main branch)
+# Diary App (dev branch)
 
-**Banner:** MAIN – Production
+**Banner:** DEV – Staging
 
 ## Start (lokal)
 ```bash
@@ -11,5 +11,5 @@ python app.py
 ```
 
 ## Unterschiede dieser Variante
-- DEBUG: False
-- "/add_entry" ohne Login erlaubt: False
+- DEBUG: True
+- "/add_entry" ohne Login erlaubt: True
