@@ -104,7 +104,7 @@ AZURE_PUBLISH_PROFILE_STAGING
 App Settings in Azure
 In der Web App → Configuration → Application settings:
 
-PASSWORD → Login-Passwort
+PASSWORD → deinSicheresPasswort
 
 SECRET_KEY → zufälliger String
 
