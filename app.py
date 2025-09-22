@@ -22,7 +22,7 @@ entries: list[Entry] = []
 
 @app.context_processor
 def inject_banner():
-    return dict(BRANCH_BANNER="DEV – Staging")
+    return dict(BRANCH_BANNER="FEATURE – Happiness Picker")
 
 @app.route("/", methods=["GET"])
 def index():

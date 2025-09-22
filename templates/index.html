@@ -22,7 +22,8 @@
 
     <form method="POST" action="{{ url_for('add_entry') }}">
       <textarea name="content" rows="4" cols="40" placeholder="What happened today?"></textarea><br>
-      <label>Happiness:
+      <div style="margin:.5rem 0;">Quick: <button type="button" onclick="document.querySelector('select[name=happiness]').value='😃'">😃</button> <button type="button" onclick="document.querySelector('select[name=happiness]').value='🙂'">🙂</button> <button type="button" onclick="document.querySelector('select[name=happiness]').value='😐'">😐</button> <button type="button" onclick="document.querySelector('select[name=happiness]').value='🙁'">🙁</button> <button type="button" onclick="document.querySelector('select[name=happiness]').value='😢'">😢</button></div>
+          <label>Happiness:
         <select name="happiness">
           <option>😃</option>
           <option>🙂</option>

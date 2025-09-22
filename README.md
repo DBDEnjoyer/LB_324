@@ -1,6 +1,6 @@
-# Diary App (dev branch)
+# Diary App (feature/happiness-picker branch)
 
-**Banner:** DEV – Staging
+**Banner:** FEATURE – Happiness Picker
 
 ## Start (lokal)
 ```bash
