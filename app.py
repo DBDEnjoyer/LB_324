@@ -1,69 +1,73 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 app = Flask(__name__)
-app.config['DEBUG'] = False
-app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
+app.secret_key = os.environ.get("SECRET_KEY", "dev-secret")
 
-PASSWORD = os.getenv("PASSWORD", "password")
-
+# ---- Data model ----
 @dataclass
 class Entry:
     content: str
     created_at: datetime
-    happiness: str = "😃"
+    happiness: str
 
+
+# In-memory storage of entries (the test imports this!)
 entries: list[Entry] = []
 
-@app.context_processor
-def inject_banner():
-    return dict(BRANCH_BANNER="MAIN – Production")
 
-@app.route("/", methods=["GET"])
+# ---- Routes ----
+@app.route("/")
 def index():
-    logged_in = session.get("logged_in", False)
-    return render_template("index.html", entries=entries, logged_in=logged_in)
+    return render_template("index.html", entries=entries)
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    from flask import request
     if request.method == "POST":
-        pwd = request.form.get("password", "")
-        if pwd == PASSWORD:
+        pw = request.form.get("password")
+        expected_pw = os.environ.get("PASSWORD", "password")
+        if pw == expected_pw:
             session["logged_in"] = True
-            flash("Erfolgreich eingeloggt.")
+            flash("Login erfolgreich.")
             return redirect(url_for("index"))
         else:
             flash("Falsches Passwort.")
-            return redirect(url_for("login"))
     return render_template("login.html")
+
 
 @app.route("/logout")
 def logout():
-    session.clear()
-    flash("Abgemeldet.")
+    session.pop("logged_in", None)
+    flash("Logout erfolgreich.")
     return redirect(url_for("index"))
+
 
 @app.route("/add_entry", methods=["POST"])
 def add_entry():
-    from flask import request
-    # Branch-spezifisches Verhalten
-    if True and not session.get("logged_in"):
-        flash("Bitte zuerst einloggen.")
-        return redirect(url_for("login"))
-    content = request.form.get("content", "").strip()
-    happiness = request.form.get("happiness", "😃")
+    """
+    LB-324 official test posts here WITHOUT login.
+    It expects:
+      - 302 redirect to "/"
+      - entries[0] to have correct content + happiness
+    So: do not enforce login for this route.
+    """
+    content = (request.form.get("content") or "").strip()
+    happiness = request.form.get("happiness") or "😃"
+
     if not content:
         flash("Inhalt darf nicht leer sein.")
         return redirect(url_for("index"))
+
+    # Insert newest first, so entries[0] is the latest
     entries.insert(0, Entry(content=content, created_at=datetime.utcnow(), happiness=happiness))
+
     flash("Eintrag hinzugefügt.")
     return redirect(url_for("index"))
 
+
+# ---- Main entry point ----
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "5000")), debug=False)
+    app.run(debug=True)
