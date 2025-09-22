@@ -86,7 +86,7 @@ Läuft bei Pushes auf main.
 
 Azure Deployment
 App-URL (Production)
-https://LGLB324.azurewebsites.net
+lglb324-gubrghash6c7fqeb.germanywestcentral-01.azurewebsites.net
 
 Secrets in GitHub
 Die folgenden Secrets müssen gesetzt sein (Repo → Settings → Secrets → Actions):
